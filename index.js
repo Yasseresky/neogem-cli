@@ -75,15 +75,10 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 })();
 
 async function getBotResponse(question) {
-  // const response = await ai.models.generateContent({
-  //   model: "gemini-3-flash-preview",
-  //   contents: question,
-  // });
-
-  // return response.text;
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve("This is a mock response. Replace this with actual API call.");
-    }, 1000);
+  const response = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: question,
   });
+
+  return response.text;
 }
