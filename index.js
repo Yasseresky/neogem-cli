@@ -8,10 +8,13 @@ import chalk from "chalk";
 import chalkAnimation from "chalk-animation";
 import gradient, { vice, teen } from "gradient-string";
 import figlet from "figlet";
+import { Marked } from "marked";
+import { markedTerminal } from "marked-terminal";
 
 dotenv.config({ path: "./.env" });
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const marked = new Marked(markedTerminal());
 
 (async () => {
   console.log(Margin().top(4));
@@ -70,15 +73,24 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const response = await getBotResponse(input);
     spin.stop();
 
-    log.info(`${chalk.magenta("Neo:")} ${chalk.blue(response)}`);
+    log.info(`${chalk.magenta("Neo:")}`);
+    console.log(response);
   }
 })();
 
 async function getBotResponse(question) {
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: question,
-  });
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: question,
+    });
 
-  return response.text;
+    const text = response.text;
+    if (!text) return "No response from AI.";
+
+    return marked.parse(text);
+  } catch (error) {
+    console.error(error);
+    return `Error: ${error.message}`;
+  }
 }
