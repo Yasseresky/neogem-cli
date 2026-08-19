@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 
-import { text, spinner, intro, outro, log, isCancel } from "@clack/prompts";
+import {
+  text,
+  spinner,
+  intro,
+  note,
+  outro,
+  log,
+  isCancel,
+} from "@clack/prompts";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { sleep, centerText, Margin } from "./utils.js";
@@ -10,6 +18,8 @@ import gradient, { vice, teen } from "gradient-string";
 import figlet from "figlet";
 import { Marked } from "marked";
 import { markedTerminal } from "marked-terminal";
+import { DatabaseSync } from "node:sqlite";
+import { initDatabase, saveMessage, db } from "./db.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -53,6 +63,8 @@ const marked = new Marked(markedTerminal());
 
   console.log(Margin().bottom());
 
+  initDatabase();
+
   const spin = spinner();
 
   while (true) {
@@ -66,15 +78,20 @@ const marked = new Marked(markedTerminal());
 
     if (isCancel(input) || input.toLocaleLowerCase() === "exit") {
       outro("Goodbye, 👏");
+      db.close();
       process.exit(0);
     }
+
+    saveMessage("user", input);
 
     spin.start();
     const response = await getBotResponse(input);
     spin.stop();
 
+    saveMessage("assistant", response);
+
     log.info(`${chalk.magenta("Neo:")}`);
-    console.log(response);
+    note(response);
   }
 })();
 
