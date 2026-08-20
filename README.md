@@ -33,11 +33,11 @@ Alternatively, you can link it locally for development:
 ```bash
 npm link
 # Then simply run:
-neogem
+neo
 ```
 
 ## Features
 
 - AI chat interface in the terminal.
 - Markdown rendering with syntax highlighting.
-- Chat history automatically saved to a local SQLite database (`neogem.db`).
+- Chat history automatically saved to a local SQLite database (`local.db`).

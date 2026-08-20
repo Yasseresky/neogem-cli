@@ -1,7 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
 import chalk from "chalk";
 
-export const db = new DatabaseSync("neogem.db");
+export const db = new DatabaseSync("local.db");
 
 export function initDatabase() {
   db.exec(`
@@ -36,8 +36,4 @@ export function getChatHistory(limit = 10) {
     console.error(chalk.red("Failed to fetch history:"), err.message);
     return [];
   }
-}
-
-export function closeDatabase() {
-  db.close();
 }
