@@ -23,7 +23,7 @@ To install and run Neogem as a CLI command:
 ```bash
 npm install -g .
 # Then simply run:
-neogem
+neo
 ```
 
 ### Locally
